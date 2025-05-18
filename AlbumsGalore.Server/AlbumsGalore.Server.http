@@ -1,0 +1,6 @@
+@AlbumsGalore.Server_HostAddress = http://localhost:5152
+
+GET {{AlbumsGalore.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
