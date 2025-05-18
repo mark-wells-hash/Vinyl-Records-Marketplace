@@ -60,7 +60,7 @@ namespace AlbumsGalore.Server.DataAccess
                 throw;
             }
         }
-        public int AddToOrders(SalesOrder order)
+        public int AddOrder(SalesOrder order)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace AlbumsGalore.Server.DataAccess
             }
         }
 
-        public int AddToOrdersItems(int itemId, int userId)
+        public int AddOrdersItems(int itemId, int userId)
         {
             try
             {

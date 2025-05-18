@@ -42,6 +42,22 @@ namespace AlbumsGalore.Server.Controllers
             return -1;
         }
 
+        [HttpPost]
+        [Route("AddOrder")]
+        public int AddOrder(SalesOrder order)
+        {
+            try
+            {
+                return objSales!.AddOrder(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                _logger.LogError(ex.Message, ex.StackTrace);
+                return -1;
+            }
+        }
+
         [HttpGet]
         [Route("GetShoppingCartByUser/{userId}")]
         public List<SalesShoppingCartExtend> GetShoppingCartByUser(int userId)
