@@ -2,30 +2,11 @@ using AlbumsGalore.Server.Models.CustomModels.DiscogsAlbums;
 using AlbumsGalore.Server.Models.CustomModels.DiscogsArtists;
 using AlbumsGalore.Server.Models.CustomModels.DiscogsMusicians;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-
-//HostApplicationBuilder builderHost = Host.CreateApplicationBuilder(args);
-//builderHost.Logging.ClearProviders();
-//builderHost.Logging.AddConsole();
-//builderHost.Logging.AddDebug();
-//builderHost.Logging.AddAzureWebAppDiagnostics();
-//builderHost.Services.Configure<AzureFileLoggerOptions>(options =>
-//{
-//    options.FileName = "azure-diagnostics-";
-//    options.FileSizeLimit = 50 * 1024;
-//    options.RetainedFileCountLimit = 5;
-//});
-//builderHost.Services.Configure<AzureBlobLoggerOptions>(options =>
-//{
-//    options.BlobName = "log.txt";
-//});
-
-//using IHost host = builderHost.Build();
-
-// Application code should start here.
-
-//await host.RunAsync();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -53,8 +34,7 @@ builder.Services.AddHttpClient<IDiscogsClientArtistModel, DiscogsClientArtistMod
 builder.Services.AddHttpClient<IDiscogsClientMusicianModel, DiscogsClientMusicianModel>();
 
 
-//Note: could have used this version of adding the policy but the UseCors needs to be called below using variable specified at the top
-//of this file. app.UseCors(MyAllowSpecificOrigins)
+//TODO: Change Cors to use the policy.WithOrigins instead of "AllowAnyOrigin". Add Urls to Secret
 
 builder.Services.AddCors(options =>
 {
@@ -84,6 +64,27 @@ var host = new HostBuilder()
                 if (hostContext.HostingEnvironment.IsDevelopment())
                 {
                     builder.AddUserSecrets<Program>();
+                }
+
+                if (hostContext.HostingEnvironment.IsProduction())
+                {
+                    var builtConfig = builder.Build();
+                    //TODO: Add your-vault-name to appsetting.json
+                    var keyVaultEndpoint = builtConfig["KeyVault:VaultUri"];
+
+                    if (!string.IsNullOrEmpty(keyVaultEndpoint))
+                    {
+                        builder.AddAzureKeyVault(
+                            new Uri(keyVaultEndpoint),
+                            new DefaultAzureCredential());
+                    }
+
+                    // The below code adds to the key vault using the SecretClient object. Try the above method first
+
+                    //var secretClient = new SecretClient(
+                    //    new Uri($"https://{builtConfig["KeyVaultName"]}.vault.azure.net/"),
+                    //    new DefaultAzureCredential());
+                    //builder.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
                 }
             })
             .Build();
