@@ -80,6 +80,7 @@ var host = new HostBuilder()
                     }
 
                     // The below code adds to the key vault using the SecretClient object. Try the above method first
+                    // See this website for whe difference and whether I need this one or not https://learn.microsoft.com/en-us/aspnet/core/security/key-vault-configuration
 
                     //var secretClient = new SecretClient(
                     //    new Uri($"https://{builtConfig["KeyVaultName"]}.vault.azure.net/"),

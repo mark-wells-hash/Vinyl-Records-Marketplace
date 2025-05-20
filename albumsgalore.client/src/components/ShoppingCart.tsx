@@ -6,7 +6,7 @@ import configData from "../config.json";
 import { Link } from 'react-router-dom';
 import { getUser } from './CommonFunctions';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { amountWithBreakdown, items, payee, purchaseUnit } from "../classes/Entities"
+import { amountWithBreakdown, items, payee, purchaseUnit, payPalCart } from "../classes/Entities"
 
 function Message({ content }) {
     console.log("Content: " + content);
@@ -110,7 +110,7 @@ function ShoppingCart() {
    
    
 
-    const buildPurchaseUnit = (genId: number, root: purchaseUnit[],sellersArray: number[]) => {
+    const buildPurchaseUnit = (genId: number, root: purchaseUnit[], sellersArray: number[], order: payPalCart) => {
 
         // Create a separate purchaseUnit for each owner usin the sellersArray and calling this function recursively
         console.log("Sellers: " + sellers.length)
@@ -173,20 +173,24 @@ function ShoppingCart() {
         objNew.items = itemList;
 
         root.push(objNew);
+        //const order = new payPalCart();
+        order.purchaseOrder = root;
         sellersArray.splice(0, 1);
-        buildPurchaseUnit(2, root, sellersArray);
+        buildPurchaseUnit(2, root, sellersArray, order);
 
-        const resultJSON = JSON.stringify(root);
+        const resultJSON = JSON.stringify(order);
         return resultJSON;
     }
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        const order = new payPalCart();
         const root: purchaseUnit[] = [];
+        //order.purchaseOrder = root;
         const sellersArray: number[] = [];
         for (let x = 0; x < sellers.length; x++) {
             sellersArray.push(sellers[x]);
         }
-        const resultJSON = buildPurchaseUnit(1, root, sellersArray);
+        const resultJSON = buildPurchaseUnit(1, root, sellersArray, order);
         console.log(resultJSON);
     }
     

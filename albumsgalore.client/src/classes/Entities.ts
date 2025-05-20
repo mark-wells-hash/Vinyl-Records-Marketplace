@@ -162,3 +162,11 @@ export class purchaseUnit {
         this.items = [];
     }
 }
+
+export class payPalCart {
+    purchaseOrder: purchaseUnit[];
+
+    constructor() {
+        this.purchaseOrder = []
+    }
+}

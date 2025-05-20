@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using AlbumsGalore.Server.Models.CustomModels;
 using PaypalServerSdk.Standard.Authentication;
 using PaypalServerSdk.Standard.Controllers;
 using PaypalServerSdk.Standard.Http.Response;
@@ -64,7 +65,7 @@ namespace AlbumsGalore.Server.Controllers
 
 
         [HttpPost("orders")]
-        public async Task<IActionResult> CreateOrder([FromBody] dynamic cart)
+        public async Task<IActionResult> CreateOrder([FromBody] PayPalCart cart)
         {
             try
             {
@@ -82,7 +83,7 @@ namespace AlbumsGalore.Server.Controllers
             }
         }
 
-        private async Task<dynamic> _CreateOrder(dynamic cart)
+        private async Task<dynamic> _CreateOrder(PayPalCart cart)
         {
             
             Console.WriteLine("Cart Contents async: " + cart);
@@ -97,12 +98,12 @@ namespace AlbumsGalore.Server.Controllers
                         PurchaseUnits = new List<PurchaseUnitRequest> {
             new PurchaseUnitRequest {
               Amount = new AmountWithBreakdown {
-                  CurrencyCode = cart.currency,
-                    MValue = cart.totalCost,
+                  CurrencyCode = "CAD", //cart.currency,
+                    MValue = "!000", //cart.totalCost,
                     Breakdown = new AmountBreakdown {
                       ItemTotal = new Money {
-                        CurrencyCode = cart.currency,
-                          MValue = cart.totalCost,
+                        CurrencyCode = "",//cart.currency,
+                          MValue = "", //cart.totalCost,
                       },
                     },
                 },
@@ -112,7 +113,7 @@ namespace AlbumsGalore.Server.Controllers
                     Name = "Shirt",
                       UnitAmount = new Money {
                         CurrencyCode = "USD",
-                          MValue = cart.totalCost,
+                          MValue = "", //cart.totalCost,
                       },
                       //Tax = new Money {
                       //  CurrencyCode = "USD",
