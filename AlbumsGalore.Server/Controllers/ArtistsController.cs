@@ -9,11 +9,12 @@ namespace AlbumsGalore.Controllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        
+        private readonly IConfiguration _configuration;
         private readonly ILogger<ArtistsController> _logger;
         private ArtistDataAccessLayer? objArtist = null;
-        public ArtistsController(ILoggerFactory loggerFactory)
+        public ArtistsController(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            _configuration = configuration;
             _logger = loggerFactory.CreateLogger<ArtistsController>();
             _logger.LogWarning("This is a WARNING message");
             _logger.LogInformation("This is an INFORMATION message");
@@ -47,7 +48,7 @@ namespace AlbumsGalore.Controllers
             };
             try
             {
-                artist = CommonFunctions.PopulateArtistFromDiscogs(artist);
+                artist = CommonFunctions.PopulateArtistFromDiscogs(_configuration, artist);
             }
             catch (Exception ex)
             {

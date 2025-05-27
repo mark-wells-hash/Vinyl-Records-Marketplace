@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Net.Http.Headers;
-using System.Text.Json;
+﻿using Microsoft.Net.Http.Headers;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using Azure;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace AlbumsGalore.Server.Models.CustomModels.DiscogsArtists
 {
@@ -14,18 +12,21 @@ namespace AlbumsGalore.Server.Models.CustomModels.DiscogsArtists
     public class DiscogsClientArtistModel : IDiscogsClientArtistModel
     {
         private readonly HttpClient _httpClient;
-        //private readonly string _remoteServiceBaseUrl;
+        private string _discogsKey;
+        private string _discogsSecret;
 
-        public DiscogsClientArtistModel(HttpClient httpClient)
+        public DiscogsClientArtistModel(IConfiguration configuration, HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _discogsKey = configuration!["Discogs:Key"]!;
+            _discogsSecret = configuration!["Discogs:Secret"]!;
         }
 
         public async Task<DiscogsArtist> OnGet(string resourceUrl)
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"{resourceUrl}?key=JlfkpVDRbNEVDhqVBpoS&secret=yhatsZVudGZzExRllgDWPzdOrylLHEIR")
+                $"{resourceUrl}?key=" + _discogsKey + "&secret=" + _discogsSecret)
             {
                 Headers =
             {

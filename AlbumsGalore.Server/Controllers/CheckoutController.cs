@@ -133,8 +133,12 @@ namespace AlbumsGalore.Server.Controllers
                 };
 
             ApiResponse<Order> result = await _ordersController.CreateOrderAsync(createOrderInput);
-            //_logger.LogInformation("result " + result);
             return result;
+            //Use this return while testing creating the createOrderInput
+            //return StatusCode(500, new
+            //{
+            //    error = "Failed to create order."
+            //});
         }
 
 

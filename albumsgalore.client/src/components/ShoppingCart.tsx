@@ -144,6 +144,7 @@ function ShoppingCart() {
                 continue;
             }
             const newItem = new items();
+            newItem.itemId = purchaseArray[x]["itemId"];
             newItem.itemCost = purchaseArray[x]["price"];
             newItem.itemDescription = purchaseArray[x]["albumDescription"];
             newItem.itemName = purchaseArray[x]["albumName"];
@@ -181,17 +182,29 @@ function ShoppingCart() {
         const resultJSON = JSON.stringify(order);
         return resultJSON;
     }
+    // This is testing click handler
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const order = new payPalCart();
         const root: purchaseUnit[] = [];
-        //order.purchaseOrder = root;
         const sellersArray: number[] = [];
         for (let x = 0; x < sellers.length; x++) {
             sellersArray.push(sellers[x]);
         }
         const resultJSON = buildPurchaseUnit(1, root, sellersArray, order);
         console.log(resultJSON);
+    }
+
+    const createJsonBody = () => {
+        const order = new payPalCart();
+        const root: purchaseUnit[] = [];
+        const sellersArray: number[] = [];
+        for (let x = 0; x < sellers.length; x++) {
+            sellersArray.push(sellers[x]);
+        }
+        const resultJSON = buildPurchaseUnit(1, root, sellersArray, order);
+        console.log(resultJSON);
+        return resultJSON;
     }
     
     if (loading) {
@@ -334,24 +347,26 @@ function ShoppingCart() {
                                                 },
                                                 // use the "body" param to optionally pass additional order information
                                                 // like product ids and quantities
-                                                body: JSON.stringify({
-                                                    cart: [
-                                                        {
-                                                            id: "1",
-                                                            quantity: "1",
-                                                            totalCost: totalCost,
-                                                            currency: initialOptions.currency,
-                                                            //items: {items}
-                                                        },
-                                                        //{
-                                                        //    id: "2",
-                                                        //    quantity: "1",
-                                                        //    totalCost: totalCost,
-                                                        //    currency: initialOptions.currency,
-                                                        //    //items: {items}
-                                                        //},
-                                                    ],
-                                                }),
+                                                body: createJsonBody()
+
+                                                    //JSON.stringify({
+                                                //    cart: [
+                                                //        {
+                                                //            id: "1",
+                                                //            quantity: "1",
+                                                //            totalCost: totalCost,
+                                                //            currency: initialOptions.currency,
+                                                //            //items: {items}
+                                                //        },
+                                                //        //{
+                                                //        //    id: "2",
+                                                //        //    quantity: "1",
+                                                //        //    totalCost: totalCost,
+                                                //        //    currency: initialOptions.currency,
+                                                //        //    //items: {items}
+                                                //        //},
+                                                //    ],
+                                                //}),
                                             });
 
                                             const orderData = await response.json();

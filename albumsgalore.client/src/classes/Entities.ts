@@ -127,11 +127,13 @@ export class amountWithBreakdown {
 
 }
 export class items {
+    itemId: number;
     itemName: string;
     itemDescription: string;
     itemCost: number;
 
     constructor() {
+        this.itemId = 0;
         this.itemName = "";
         this.itemDescription = "";
         this.itemCost = 0;

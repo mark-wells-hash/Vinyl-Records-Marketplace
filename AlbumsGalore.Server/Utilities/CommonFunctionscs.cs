@@ -2,10 +2,8 @@
 using AlbumsGalore.Server.Models.CustomModels.DiscogsArtists;
 using AlbumsGalore.Server.Models.CustomModels.DiscogsAlbums;
 using AlbumsGalore.Server.Models.CustomModels.DiscogsMusicians;
-
 using System.Reflection;
 using System.Diagnostics;
-using System.Net.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AlbumsGalore.Server.Utilities
@@ -39,11 +37,11 @@ namespace AlbumsGalore.Server.Utilities
             return result;
         }
 
-        public static AlbumExtend PopulateAlbumFromDiscogs(AlbumExtend album)
+        public static AlbumExtend PopulateAlbumFromDiscogs(IConfiguration configuration, AlbumExtend album)
         {
             var httpClient = new HttpClient();
-            DiscogsClientSearchAlbumModel discogsClientSearchModel = new DiscogsClientSearchAlbumModel(httpClient);
-            DiscogsClientAlbumModel discogsClientAlbumModel = new DiscogsClientAlbumModel(httpClient);
+            DiscogsClientSearchAlbumModel discogsClientSearchModel = new DiscogsClientSearchAlbumModel(configuration, httpClient);
+            DiscogsClientAlbumModel discogsClientAlbumModel = new DiscogsClientAlbumModel(configuration, httpClient);
             var fromDiscogs = new DiscogsAlbumSearch();
             var fromDiscogsAlbum = new DiscogsAlbum();
             try
@@ -102,12 +100,12 @@ namespace AlbumsGalore.Server.Utilities
             return album;
         }
 
-        public static AlbumsGalore.Server.Models.Artist PopulateArtistFromDiscogs(AlbumsGalore.Server.Models.Artist artist)
+        public static AlbumsGalore.Server.Models.Artist PopulateArtistFromDiscogs(IConfiguration configuration, AlbumsGalore.Server.Models.Artist artist)
         {
             var httpClient = new HttpClient();
-            DiscogsClientSearchArtistModel discogsClientSearchArtistModel = new DiscogsClientSearchArtistModel(httpClient);
-            DiscogsClientArtistModel discogsClientArtistModel = new DiscogsClientArtistModel(httpClient);
-            DiscogsClientMusicianModel discogsClientMusicianModel = new DiscogsClientMusicianModel(httpClient);
+            DiscogsClientSearchArtistModel discogsClientSearchArtistModel = new DiscogsClientSearchArtistModel(configuration, httpClient);
+            DiscogsClientArtistModel discogsClientArtistModel = new DiscogsClientArtistModel(configuration, httpClient);
+            DiscogsClientMusicianModel discogsClientMusicianModel = new DiscogsClientMusicianModel(configuration, httpClient);
             var fromDiscogsArtistSearch = new DiscogsArtistSearch();
             var fromDiscogsArtist = new DiscogsArtist();
             try

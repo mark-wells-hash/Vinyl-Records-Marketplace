@@ -30,6 +30,7 @@
 
     public class Items
     {
+        public int itemId { get; set; }
         public string? itemName { get; set; }
         public string? itemDescription { get; set; }
         public int itemCost { get; set; }

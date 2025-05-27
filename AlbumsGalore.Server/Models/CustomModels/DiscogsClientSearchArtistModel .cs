@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Net.Http.Headers;
-using System.Text.Json;
+﻿using Microsoft.Net.Http.Headers;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using Azure;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace AlbumsGalore.Server.Models.CustomModels.DiscogsArtists
 {
@@ -14,18 +12,23 @@ namespace AlbumsGalore.Server.Models.CustomModels.DiscogsArtists
     public class DiscogsClientSearchArtistModel : IDiscogsClientSearchArtistModel
     {
         private readonly HttpClient _httpClient;
-        //private readonly string _remoteServiceBaseUrl;
+        private string _resourceUrl;
+        private string _discogsKey;
+        private string _discogsSecret;
 
-        public DiscogsClientSearchArtistModel(HttpClient httpClient)
+        public DiscogsClientSearchArtistModel(IConfiguration configuration, HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _resourceUrl = configuration!["Discogs:SearchURL"]!;
+            _discogsKey = configuration!["Discogs:Key"]!;
+            _discogsSecret = configuration!["Discogs:Secret"]!;
         }
 
         public async Task<DiscogsArtistSearch> OnGet(string artistName)
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"https://api.discogs.com/database/search?q={artistName}&type=artist&key=JlfkpVDRbNEVDhqVBpoS&secret=yhatsZVudGZzExRllgDWPzdOrylLHEIR")
+                $"{_resourceUrl}?q={artistName}&type=artist&key=" + _discogsKey + "&secret=" + _discogsSecret)
             {
                 Headers =
             {

@@ -12,8 +12,10 @@ namespace AlbumsGalore.Server.Controllers
     {
         private readonly ILogger<AlbumController> _logger;
         private AlbumDataAccessLayer? objAlbum = null;
-        public AlbumController(ILoggerFactory loggerFactory)
+        private readonly IConfiguration _configuration;
+        public AlbumController(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            _configuration = configuration;
             _logger = loggerFactory.CreateLogger<AlbumController>();
             _logger.LogWarning("This is a WARNING message");
             _logger.LogInformation("This is an INFORMATION message");
@@ -181,7 +183,7 @@ namespace AlbumsGalore.Server.Controllers
             };
             try
             {
-                album = CommonFunctions.PopulateAlbumFromDiscogs(album);
+                album = CommonFunctions.PopulateAlbumFromDiscogs(_configuration, album);
             }
             catch (Exception ex)
             {
